@@ -1,0 +1,31 @@
+// recommendations.proto
+//use version proto3
+syntax = "proto3";
+//數字是編碼與解碼所會用到的編號，這令你能夠移除其中一個欄位而不打亂整個資料結構的編碼與解碼
+// 列舉型別
+enum BookCategory {
+    MYSTERY = 0;
+    SCIENCE_FICTION = 1;
+    SELF_HELP = 2;
+}
+//每個message都清楚定義資料的型別
+message RecommendationRequest {
+    int32 user_id = 1;
+    BookCategory category = 2;
+    int32 max_results = 3;
+}
+ 
+message BookRecommendation {
+    int32 id = 1;
+    string title = 2;
+}
+// 有多筆資料就會用repeat
+//這裡的解讀是，回傳資料裡，會有多筆的BookRecommendation資料結構
+message RecommendationResponse {
+    repeated BookRecommendation recommendations = 1;
+}
+// service的input和output定義
+//rpc代表遠程過程調用，後面寫到client端時會再解釋
+service Recommendations {
+    rpc Recommend (RecommendationRequest) returns (RecommendationResponse);
+}

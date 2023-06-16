@@ -1,0 +1,82 @@
+//webscan.proto
+//use version proto3
+syntax = "proto3";
+
+enum BlockChain {
+    ARBITRUM = 0;
+    BSC = 1;
+    BITCOIN = 2;
+    CELO = 3;
+    ETHEREUM = 4;
+}
+
+//type
+message Subscriber{
+    BlockChain blockchain = 1;
+    string wallet_address = 2;
+    string webhook_url = 3;
+}
+
+message Transaction{
+    string txn_hash = 1;
+    string type = 2;
+    int32 block_number = 3;
+    int32 timestamp = 4;
+    string address_from = 5;
+    string address_to = 6;
+    float amount = 7;
+    string token_symbol = 8;
+    int32 decimal = 9;
+    string contract_address = 10;
+}
+
+//request
+message Empty {}
+
+message WebhookRegistrationRequest{
+    BlockChain blockchain = 1;
+    string wallet_address = 2;
+    string webhook_url = 3;
+}
+message WebhookInquireRequest{
+    string webhook_url = 1;
+}
+message WebhookGetHistoryRequest{
+    BlockChain blockchain = 1;
+    string wallet_address = 2;
+    optional string webhook_url = 3;
+    optional int32 start_block = 4;
+    optional int32 end_block = 5;
+}
+
+//response
+message WebhookRegistrationResponse{
+    bool success = 1;
+    string message = 2;
+    Subscriber subscriber = 3;
+}
+
+message WebhookInquireResponse {
+    bool success = 1;
+    string message = 2;
+    repeated Subscriber subscribers = 3;
+}
+message WebhookDeleteAllResponse{
+    bool success = 1;
+    string message = 2;
+    int32 deleted_subscribers_count = 3;
+    int32 deleted_transactions_count = 4;
+}
+message WebhookGetHistoryResponse{
+    bool success = 1;
+    string message = 2;
+    repeated Transaction transactions = 3;
+}
+
+service WebhookService{
+    rpc Register(WebhookRegistrationRequest) returns (WebhookRegistrationResponse);
+    rpc Unregister(WebhookRegistrationRequest) returns (WebhookRegistrationResponse);
+    rpc Inquire(WebhookInquireRequest) returns (WebhookInquireResponse);
+    rpc DeleteAll(Empty) returns (WebhookDeleteAllResponse);
+    rpc GetHistory(WebhookGetHistoryRequest) returns (WebhookGetHistoryResponse);
+}
