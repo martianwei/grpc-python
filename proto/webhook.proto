@@ -2,39 +2,46 @@
 //use version proto3
 syntax = "proto3";
 
-enum BlockChain {
-    ARBITRUM = 0;
-    BSC = 1;
-    BITCOIN = 2;
-    CELO = 3;
-    ETHEREUM = 4;
-}
+// enum BlockChain {
+//     atbiturm = 0;
+//     bsc = 1;
+//     bitcoin = 2;
+//     celo = 3;
+//     ethereum = 4;
+//     fantom = 5;
+//     optimism = 6;
+//     polygon = 7;
+//     solana = 8;
+//     tron = 9;
+// }
 
 //type
 message Subscriber{
-    BlockChain blockchain = 1;
+    string blockchain = 1;
     string wallet_address = 2;
     string webhook_url = 3;
 }
 
 message Transaction{
-    string txn_hash = 1;
-    string type = 2;
-    int32 block_number = 3;
-    int32 timestamp = 4;
-    string address_from = 5;
-    string address_to = 6;
-    float amount = 7;
-    string token_symbol = 8;
-    int32 decimal = 9;
-    string contract_address = 10;
+    string blockchain = 1;
+    string txn_hash = 2;
+    string type = 3;
+    int32 block_number = 4;
+    int32 timestamp = 5;
+    string address_from = 6;
+    string address_to = 7;
+    float amount = 8;
+    string token_symbol = 9;
+    int32 decimal = 10;
+    string contract_address = 11;
+    float txn_fee = 12;
 }
 
 //request
 message Empty {}
 
 message WebhookRegistrationRequest{
-    BlockChain blockchain = 1;
+    string blockchain = 1;
     string wallet_address = 2;
     string webhook_url = 3;
 }
@@ -42,7 +49,7 @@ message WebhookInquireRequest{
     string webhook_url = 1;
 }
 message WebhookGetHistoryRequest{
-    BlockChain blockchain = 1;
+    string blockchain = 1;
     string wallet_address = 2;
     optional string webhook_url = 3;
     optional int32 start_block = 4;
